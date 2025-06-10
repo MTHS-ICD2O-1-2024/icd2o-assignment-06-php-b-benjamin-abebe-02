@@ -59,7 +59,6 @@
         ?>
 
         <br>
-        <a href="index.php">Get Another Verse</a>
         <div class="page-content-answer">
           <div id="verse"></div>
         </div>
