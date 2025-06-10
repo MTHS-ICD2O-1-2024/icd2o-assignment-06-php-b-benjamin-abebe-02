@@ -34,48 +34,39 @@
         </a>
 
         <br /><br />
-          <?php
-          // Randomly pick a verse ID
-          $verses = ["JHN.3.16", "PSA.23.1", "ROM.8.28", "MAT.6.33", "PHI.4.13"];
-          $randomVerseId = $verses[array_rand($verses)];
 
-          $apiKey = "ac9bf9be9a365d3bfec89c6837e17f1a";
-          $bibleId = "de4e12af7f28f599-02"; 
+        <?php
+        // Pick a random verse
+        $verses = ["JHN.3.16", "PSA.23.1", "ROM.8.28", "MAT.6.33", "PHI.4.13"];
+        $randomVerseId = $verses[array_rand($verses)];
 
-          // API URL
-          $url = "https://api.scripture.api.bible/v1/bibles/$bibleId/verses/$randomVerseId";
+        // API details
+        $apiKey = "ac9bf9be9a365d3bfec89c6837e17f1a";
+        $bibleId = "de4e12af7f28f599-02";
+        $url = "https://api.scripture.api.bible/v1/bibles/$bibleId/verses/$randomVerseId";
 
-          $options = [
-            "http" => [
-              "method" => "GET",
-              "header" => "api-key: $apiKey\r\n"
-            ]
-          ];
+        // Fetch verse from API
+        $response = @file_get_contents($url, false, stream_context_create(["http" => ["header" => "api-key: $apiKey\r\n"]]));
 
-          $context = stream_context_create($options);
+        // Display verse
+        if ($response) {
+          $data = json_decode($response, true);
+          echo "<h2>" . $data["data"]["reference"] . "</h2>";
+          echo "<p>" . $data["data"]["content"] . "</p>";
+        } else {
+          echo "<p>Could not fetch verse. Please try again.</p>";
+        }
+        ?>
 
-          // Make the request
-          $response = file_get_contents($url, false, $context);
-
-          // Decode the JSON
-          if ($response !== false) {
-            $data = json_decode($response, true);
-            $reference = $data["data"]["reference"];
-            $content = $data["data"]["content"];
-          } else {
-            $reference = "Error";
-            $content = "Could not fetch verse.";
-          }
-          ?>
-
-          <div class="page-content-answer">
-            <div id="verse" ></div>
-          </div>
+        <br>
+        <a href="index.php">Get Another Verse</a>
+        <div class="page-content-answer">
+          <div id="verse"></div>
+        </div>
       </div>
     </main>
     </form>
   </div>
-
   <script src="./js/script.js"></script>
 </body>
 
